@@ -1,7 +1,7 @@
-import { Keyboard } from './Keyboard';
-import { Player } from './Player';
+import Keyboard from './Keyboard';
+import Player from './Player';
 
-export class Game {
+export default class Game {
 	public dodgeCanvas: HTMLCanvasElement;
 	public ctx: CanvasRenderingContext2D;
 	public keys: string[] = [];
@@ -20,7 +20,7 @@ export class Game {
 	}
 
 	public draw() {
-		this.player.draw(this.ctx);
+		this.player.draw();
 	}
 
 	public update(_: number) {

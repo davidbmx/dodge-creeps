@@ -1,6 +1,6 @@
-import { Game } from './Game';
+import Game from './Game';
 
-export class Keyboard {
+export default class Keyboard {
 	private gameKeys = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'];
 	constructor(game: Game) {
 		window.addEventListener('keydown', ({ code }) => {

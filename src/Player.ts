@@ -1,70 +1,87 @@
-import { Game } from './Game';
-import { PlayerSprint } from './PlayerSprint';
+import AnimateSprint from './AnimateSprint';
+import Character from './Character';
+import Game from './Game';
 
-export class Player {
-	public game: Game;
-	public width = 65;
-	public height = 80;
-	public speed = 5;
-	public positionX = 20;
-	public positionY = 20;
-	public playerAnimation: PlayerSprint;
+type TFrames = 'walk' | 'up';
+
+export default class Player extends Character {
+	public playerAnimation: AnimateSprint<TFrames>;
 
 	constructor(game: Game) {
-		this.game = game;
-		this.playerAnimation = new PlayerSprint(this);
+		super(game);
+		this.width = 65;
+		this.height = 80;
+		this.speed = 5;
+		this.position = {
+			x: this.game.screenWidth / 2 - this.width / 2,
+			y: this.game.screenHeight / 2 - this.height / 2,
+		};
+
+		const frames: Record<TFrames, HTMLImageElement[]> = {
+			walk: [
+				document.getElementById('walk1') as HTMLImageElement,
+				document.getElementById('walk2') as HTMLImageElement,
+			],
+			up: [
+				document.getElementById('up1') as HTMLImageElement,
+				document.getElementById('up2') as HTMLImageElement,
+			],
+		};
+
+		this.playerAnimation = new AnimateSprint(frames, this, game.ctx);
+		this.playerAnimation.animation = 'walk';
 	}
 
-	public draw(ctx: CanvasRenderingContext2D) {
+	public draw() {
 		this.playerAnimation.draw();
-		// ctx.fillRect(this.positionX, this.positionY, this.width, this.height);
 	}
 
 	public update() {
-		let position = {
+		let velocity = {
 			x: 0,
 			y: 0,
 		};
+
 		if (this.game.keys.includes('ArrowRight')) {
-			if (this.positionX + this.speed + this.width > this.game.screenWidth) {
+			if (this.position.x + this.speed + this.width > this.game.screenWidth) {
 				return;
 			}
-			position.x += this.speed;
+			velocity.x += this.speed;
 		}
 
 		if (this.game.keys.includes('ArrowLeft')) {
-			if (this.positionX - this.speed < 0) {
+			if (this.position.x - this.speed < 0) {
 				return;
 			}
-			position.x -= this.speed;
+			velocity.x -= this.speed;
 		}
 
 		if (this.game.keys.includes('ArrowUp')) {
-			if (this.positionY - this.speed < 0) {
+			if (this.position.y - this.speed < 0) {
 				return;
 			}
-			position.y -= this.speed;
+			velocity.y -= this.speed;
 		}
 
 		if (this.game.keys.includes('ArrowDown')) {
-			if (this.positionY + this.speed + this.height > this.game.screenHeight) {
-				this.positionX;
+			if (this.position.y + this.speed + this.height > this.game.screenHeight) {
+				return;
 			}
-			position.y += this.speed;
+			velocity.y += this.speed;
 		}
 
-		this.positionX += position.x;
-		this.positionY += position.y;
+		this.position.x += velocity.x;
+		this.position.y += velocity.y;
 
-		if (position.x !== 0 || position.y !== 0) {
+		if (velocity.x !== 0 || velocity.y !== 0) {
 			this.playerAnimation.start();
 		} else {
 			this.playerAnimation.stop();
 		}
 
-		if (position.x != 0) {
+		if (velocity.x != 0) {
 			this.playerAnimation.animation = 'walk';
-		} else if (position.y != 0) {
+		} else if (velocity.y != 0) {
 			this.playerAnimation.animation = 'up';
 		}
 		this.playerAnimation.update();
