@@ -7,12 +7,20 @@ export default class Keyboard {
 			if (this.gameKeys.includes(code) && !game.keys.includes(code)) {
 				game.keys.push(code);
 			}
+
+			if (code === 'Enter') {
+				game.startGame();
+			}
 		});
 
 		window.addEventListener('keyup', ({ code }) => {
 			if (game.keys.includes(code)) {
 				game.keys = game.keys.filter(keyCode => keyCode !== code);
 			}
+		});
+
+		game.dodgeCanvas.addEventListener('mousedown', ev => {
+			game.checkClick(ev.offsetX, ev.offsetY);
 		});
 	}
 }

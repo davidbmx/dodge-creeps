@@ -30,10 +30,18 @@ export default class Player extends Character {
 
 		this.playerAnimation = new AnimateSprint(frames, this, game.ctx);
 		this.playerAnimation.animation = 'walk';
+		this.hide();
+	}
+
+	public start(position: { x: number; y: number }) {
+		this.position = position;
+		this.show();
 	}
 
 	public draw() {
-		this.playerAnimation.draw();
+		if (this.isShow()) {
+			this.playerAnimation.draw();
+		}
 	}
 
 	public update() {

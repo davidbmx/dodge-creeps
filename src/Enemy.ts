@@ -47,8 +47,19 @@ export default class Enemy extends Character {
 	}
 
 	public update() {
-		this.position.x += this.direction.x;
-		this.position.y += this.direction.y;
+		const nextPositionX = this.position.x + this.direction.x;
+		const nextPositionY = this.position.y + this.direction.y;
+		if (
+			nextPositionX > this.game.screenWidth + this.width * 0.5 ||
+			this.position.x < -this.width ||
+			nextPositionY > this.game.screenHeight + this.height * 0.5 ||
+			nextPositionY < -this.height
+		) {
+			this.isDeleted = true;
+		}
+
+		this.position.x = nextPositionX;
+		this.position.y = nextPositionY;
 
 		this.playerAnimation.update();
 	}
