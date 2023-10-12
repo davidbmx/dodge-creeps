@@ -41,7 +41,7 @@ export default class Game {
 		});
 	}
 
-	public update(deltaTime: number) {
+	public update() {
 		if (this.isGameStart) {
 			if (this.fpsCount + 1 > 60) {
 				this.score += 1;
@@ -100,10 +100,9 @@ export default class Game {
 		}
 	}
 
-	public renderFrame(timeStamp: number) {
-		const deltaTime = timeStamp - this.lastTime;
+	public renderFrame(_: number) {
 		this.ctx.clearRect(0, 0, this.screenWidth, this.screenHeight);
-		this.update(deltaTime);
+		this.update();
 		this.draw();
 		requestAnimationFrame(props => this.renderFrame(props));
 	}
